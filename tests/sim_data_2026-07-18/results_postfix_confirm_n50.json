@@ -1,0 +1,39 @@
+[
+  {
+    "label": "scale_n50_rep1",
+    "units": 50,
+    "files_expected": 125,
+    "files_in_origin": 125,
+    "gave_up_after_max_retries": [],
+    "lost_updates_pushed_but_missing": [],
+    "index_auto_start_count": 1,
+    "index_conflict_markers": 0,
+    "fw_check_rc": 0,
+    "fw_check_out": "[fw check] clean",
+    "history_commits_with_markers": 0,
+    "retries_total": 548,
+    "retries_max": 19,
+    "retries_dist": {
+      "0": 76,
+      "1": 1,
+      "2": 1,
+      "4": 1,
+      "5": 1,
+      "6": 2,
+      "7": 4,
+      "8": 2,
+      "9": 4,
+      "10": 4,
+      "11": 2,
+      "12": 9,
+      "13": 4,
+      "14": 2,
+      "15": 6,
+      "16": 1,
+      "17": 3,
+      "18": 1,
+      "19": 1
+    },
+    "wall_time_s": 44.97
+  }
+]
