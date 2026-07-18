@@ -1,5 +1,7 @@
 # forge-wiki
 
+English · **[한국어](README.ko.md)** · **[日本語](README.ja.md)** · **[中文](README.zh.md)**
+
 A governed markdown wiki for LLM agents — and the humans they work with.
 
 Most agent-knowledge tools are either fully automatic memory (mem0, Zep, Letta — no
