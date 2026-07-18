@@ -24,12 +24,13 @@ MAX_FILE = 256 * 1024
 MAX_HITS = 40
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
-if not (ROOT / "INDEX.md").exists():
-    sys.exit(f"fw_mcp: {ROOT} has no INDEX.md — not a wiki root")
+HOME = next((ROOT / n for n in ("INDEX.md", "index.md") if (ROOT / n).exists()), None)
+if HOME is None:
+    sys.exit(f"fw_mcp: {ROOT} has no INDEX.md/index.md — not a wiki root")
 
 TOOLS = [
     {"name": "wiki_index",
-     "description": "Read the wiki home (INDEX.md): curated canonical pointers + machine-derived recency index. Call this first.",
+     "description": "Read the wiki home (INDEX.md / OKF index.md): curated canonical pointers + machine-derived recency index. Call this first.",
      "inputSchema": {"type": "object", "properties": {}}},
     {"name": "wiki_get",
      "description": "Read one wiki file by wiki-rooted relative path (e.g. 'signals/foo_2026-07-18.md').",
@@ -52,7 +53,7 @@ def safe_resolve(rel: str) -> Path:
 
 def tool_call(name: str, args: dict) -> str:
     if name == "wiki_index":
-        return (ROOT / "INDEX.md").read_text(encoding="utf-8", errors="replace")[:MAX_FILE]
+        return HOME.read_text(encoding="utf-8", errors="replace")[:MAX_FILE]
     if name == "wiki_get":
         p = safe_resolve(args["path"])
         if p.suffix.lower() not in (".md", ".txt"):

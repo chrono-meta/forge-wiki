@@ -16,8 +16,11 @@
 
 - Knowledge file = markdown + YAML frontmatter; `type` required (OKF), `description` required
   (forge-wiki addition — the index derives from it, so it is load-bearing here).
-- `index.md`/`log.md` reserved per OKF. forge-wiki's `INDEX.md` is the *hub home* (curated + AUTO);
-  an OKF consumer that only understands `index.md` can still traverse the bundle.
+- `index.md`/`log.md` reserved per OKF. The wiki home is `INDEX.md` **or** the OKF root
+  `index.md` — first-existing wins and ONE file serves both roles (curated pointers +
+  AUTO block are valid OKF sectioned link lists). F-4, field-found: on case-insensitive
+  filesystems (macOS/Windows) the two names are the same file, so coexistence was never
+  real — role-merge is the design, not a workaround.
 - Links: standard markdown links (OKF edges). `[[wikilink]]` tolerated, not required.
 - Recency: filename date `YYYY-MM-DD` > nearest dated parent dir > mtime. Filenames SHOULD embed
   dates — mtime is untrustworthy across rsync/copy/clone (field-measured).

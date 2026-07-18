@@ -49,12 +49,24 @@ PER_SECTION = int(os.environ.get("FW_PER_SECTION", "5"))
 EXCLUDE_DIRS = {".git", ".github", "backups", "node_modules", "bin", "tests", "scripts"}
 
 
+def home_file(root: Path) -> Path:
+    """The wiki home: INDEX.md, or the OKF-reserved index.md. F-4 (field-found,
+    2026-07-18): on case-insensitive filesystems (macOS/Windows) the two names are
+    ONE file, so fw treats first-existing as the single home — the AUTO block and
+    OKF's sectioned link lists are the same shape, one file serves both roles."""
+    for name in ("INDEX.md", "index.md"):
+        p = root / name
+        if p.exists():
+            return p
+    return root / "INDEX.md"
+
+
 def wiki_root() -> Path:
     p = Path.cwd()
     for cand in [p, *p.parents]:
-        if (cand / "INDEX.md").exists():
+        if (cand / "INDEX.md").exists() or (cand / "index.md").exists():
             return cand
-    sys.exit("fw: no INDEX.md found here or above — run inside a wiki (fw init: create INDEX.md first)")
+    sys.exit("fw: no INDEX.md/index.md found here or above — run inside a wiki (fw init first)")
 
 
 def sections(root: Path):
@@ -186,7 +198,7 @@ def split_regions(text: str):
 
 
 def regenerate(root: Path, write: bool, heal: bool = False) -> int:
-    index = root / "INDEX.md"
+    index = home_file(root)
     text = index.read_text(encoding="utf-8", errors="replace")
     before, auto, after = split_regions(text)
     warn = 0
@@ -228,7 +240,7 @@ def cmd_lint(root: Path) -> int:
 
 
 def cmd_doctor(root: Path) -> int:
-    text = (root / "INDEX.md").read_text(encoding="utf-8", errors="replace")
+    text = home_file(root).read_text(encoding="utf-8", errors="replace")
     before, auto, after = split_regions(text)
     curated = before + after
     broken = []
@@ -262,7 +274,7 @@ def cmd_doctor(root: Path) -> int:
 
 
 def cmd_check(root: Path) -> int:
-    text = (root / "INDEX.md").read_text(encoding="utf-8", errors="replace")
+    text = home_file(root).read_text(encoding="utf-8", errors="replace")
     _, auto, _ = split_regions(text)
     fresh = build_block(root)
 
