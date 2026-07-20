@@ -21,7 +21,9 @@
   AUTO block are valid OKF sectioned link lists). F-4, field-found: on case-insensitive
   filesystems (macOS/Windows) the two names are the same file, so coexistence was never
   real — role-merge is the design, not a workaround.
-- Links: standard markdown links (OKF edges). `[[wikilink]]` tolerated, not required.
+- Links: standard markdown links (OKF edges). `[[wikilink]]` is accepted **at author time only** and
+  is normalized to a standard link at commit; an unnormalized wikilink **fails CI**. "Tolerated" was
+  the ambiguity that let vaults drift back to a form GitHub and generic tooling cannot resolve.
 - Recency: filename date `YYYY-MM-DD` > nearest dated parent dir > mtime. Filenames SHOULD embed
   dates — mtime is untrustworthy across rsync/copy/clone (field-measured).
 

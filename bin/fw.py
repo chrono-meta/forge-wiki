@@ -152,7 +152,10 @@ def build_block(root: Path) -> str:
             desc = summary_of(lines)
             desc = (desc[:110] + "…") if len(desc) > 110 else desc
             closed = " ⛔closed" if CLOSED_RE.search("".join(lines)) else ""
-            out.append(f"- `{p.relative_to(root)}` ({file_date(p)}){closed}{' — ' + desc if desc else ''}")
+            _rel = p.relative_to(root)
+            # 링크로 emit 한다. 백틱 경로는 옵시디언에서 그래프 엣지도 백링크도 안 만든다 —
+            # 위키 홈이 고립 노드로 렌더된다. write_llms_txt 는 이미 링크 형태를 쓴다(일관성).
+            out.append(f"- [{p.stem}]({_rel}) ({file_date(p)}){closed}{' — ' + desc if desc else ''}")
     out.append(END)
     return "\n".join(out)
 
@@ -245,8 +248,12 @@ def cmd_doctor(root: Path) -> int:
     curated = before + after
     broken = []
     secs = set(sections(root))
-    for m in re.finditer(r"`([\w./-]+?\.md)`", curated):
-        rel = m.group(1)
+    # 백틱 경로 AND 표준 마크다운 링크 둘 다 스캔한다.
+    # 백틱만 매칭하면, SPEC 이 권장하는 표준 링크로 쓴 포인터가 **한 번도 검사되지 않는다**
+    # = 신선도 계약이 fail-open. %25/%20 인코딩 경로도 클래스에 포함한다.
+    _PTR = r"`([\w./%-]+?\.md)`|\]\(([\w./%-]+?\.md)(?:#[^)]*)?\)"
+    for m in re.finditer(_PTR, curated):
+        rel = m.group(1) or m.group(2)
         # only paths rooted at THIS wiki's sections — cross-repo pointers are not ours to judge
         if "/" in rel and rel.split("/")[0] in secs and not (root / rel).exists() \
                 and not any(c in rel for c in "<>{}*"):
