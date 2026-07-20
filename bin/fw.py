@@ -132,8 +132,11 @@ def lint_frontmatter(lines) -> list:
 
 
 def collect(root: Path, section: str):
+    # F-4 로 소문자 index.md 도 유효한 위키 홈이 됐는데 여기선 대문자만 제외하고 있었다
+    # → 홈이 자기 인덱스 안에 콘텐츠로 다시 색인된다. 둘 다 제외한다.
+    # (OKF 는 index.md 를 디렉터리 목록으로 예약하므로 하위 디렉터리의 index.md 도 콘텐츠가 아니다)
     files = [p for p in (root / section).rglob("*.md")
-             if ".git" not in p.parts and p.name != "INDEX.md"]
+             if ".git" not in p.parts and p.name not in ("INDEX.md", "index.md")]
     files.sort(key=lambda p: (file_date(p), p.name), reverse=True)
     return files
 
