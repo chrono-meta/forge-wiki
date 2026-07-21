@@ -90,7 +90,7 @@ writes to is the signal to delete it, not to fill it.**
 `init`-ed yet — it brings its own `INDEX.md`, and `fw init` refuses to overwrite one:
 
 ```sh
-cp -r examples/org-instance/. your-knowledge-repo/
+cp -r ~/tools/forge-wiki/examples/org-instance/. your-knowledge-repo/
 cd your-knowledge-repo
 fw init          # keeps the copied INDEX.md, still appends the AGENTS.md block
 fw sync --write

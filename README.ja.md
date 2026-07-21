@@ -88,7 +88,7 @@ your-knowledge-repo/
 自分の`INDEX.md`を持ち込むが、`fw init`は既存のINDEX.mdを上書きしない:
 
 ```sh
-cp -r examples/org-instance/. your-knowledge-repo/
+cp -r ~/tools/forge-wiki/examples/org-instance/. your-knowledge-repo/
 cd your-knowledge-repo
 fw init          # コピーされたINDEX.mdはそのまま、AGENTS.mdブロックのみ追記
 fw sync --write

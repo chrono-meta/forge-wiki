@@ -4,7 +4,7 @@ This is a minimal, working forge-wiki instance for a fictional org. **Copy it, r
 content, keep the shape.** Two sections, one file each, so the shape is visible at a glance.
 
 ```sh
-cp -r examples/org-instance/. your-knowledge-repo/   # copy first — it brings its own INDEX.md
+cp -r ~/tools/forge-wiki/examples/org-instance/. your-knowledge-repo/   # copy first — it brings its own INDEX.md
 cd your-knowledge-repo
 fw init          # keeps the copied INDEX.md (it refuses to overwrite) and appends the AGENTS.md block
 fw sync --write  # regenerate the AUTO-INDEX block + llms.txt for YOUR files

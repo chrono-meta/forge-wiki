@@ -87,7 +87,7 @@ your-knowledge-repo/
 자기 `INDEX.md`를 갖고 오는데 `fw init`은 기존 INDEX.md를 덮어쓰지 않는다:
 
 ```sh
-cp -r examples/org-instance/. your-knowledge-repo/
+cp -r ~/tools/forge-wiki/examples/org-instance/. your-knowledge-repo/
 cd your-knowledge-repo
 fw init          # 복사된 INDEX.md는 그대로 두고, AGENTS.md 블록만 덧붙인다
 fw sync --write

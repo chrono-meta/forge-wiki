@@ -82,7 +82,7 @@ your-knowledge-repo/
 `INDEX.md`,而 `fw init` 不会覆盖已存在的 INDEX.md:
 
 ```sh
-cp -r examples/org-instance/. your-knowledge-repo/
+cp -r ~/tools/forge-wiki/examples/org-instance/. your-knowledge-repo/
 cd your-knowledge-repo
 fw init          # 保留复制过来的 INDEX.md,只追加 AGENTS.md 块
 fw sync --write
