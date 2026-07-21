@@ -14,9 +14,10 @@ description: Home of the Acme Robotics knowledge wiki — curated pointers above
 Hand-maintained. One line per thing that is *the* current answer, so a new session extends the
 canonical artifact instead of forking a parallel copy beside it.
 
-- **Deploy runbook** → `memory/deploy-runbook.md` — the only runbook; older gists are dead.
-- **Latency budget decision** → `signals/2026-07-14-latency-budget.md` — supersedes the
-  figure quoted in the Q2 planning doc.
+- **Deploy runbook** → [memory/deploy-runbook.md](memory/deploy-runbook.md) — the only
+  runbook; older gists are dead.
+- **Measured latency budget** → [signals/2026-07-14-latency-budget.md](signals/2026-07-14-latency-budget.md)
+  — supersedes the figure quoted in the Q2 planning doc.
 
 ## Section map
 
@@ -32,5 +33,5 @@ canonical artifact instead of forking a parallel copy beside it.
 - [deploy-runbook](memory/deploy-runbook.md) (2026-07-02) — Production deploy sequence for the fleet-api service, including the one step that cannot be automated.
 
 ### signals/ — latest 1 of 1
-- [2026-07-14-latency-budget](signals/2026-07-14-latency-budget.md) (2026-07-14) — Measured p99 for fleet-api under production load — the planning-doc figure was an estimate, this one is measur…
+- [2026-07-14-latency-budget](signals/2026-07-14-latency-budget.md) (2026-07-14) — Measured p99 for fleet-api is 380ms — the planning doc's 250ms was an estimate, never re-measured.
 <!-- AUTO-INDEX:END -->

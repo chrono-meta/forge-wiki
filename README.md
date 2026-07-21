@@ -24,15 +24,37 @@ write, humans gate, the index maintains itself.**
 
 ## Quick start
 
+Nothing to install: one Python file, no dependencies beyond `python3`. Clone it once, keep it
+anywhere, call it by path.
+
 ```sh
-cd your-knowledge-repo
-python3 bin/fw.py init          # Phase-0 audit + non-overwriting scaffold
-# drop markdown files into section dirs (signals/, notes/, ...)
-python3 bin/fw.py sync --write  # regenerate the recency index
-python3 bin/fw.py doctor        # freshness + broken-pointer report
+git clone https://github.com/chrono-meta/forge-wiki.git ~/tools/forge-wiki
+alias fw='python3 ~/tools/forge-wiki/bin/fw.py'   # optional — every example below uses `fw`
+
+cd your-knowledge-repo   # the repo that will HOLD your wiki — not the clone above
+fw init                  # Phase-0 audit + non-overwriting scaffold (creates signals/)
+mkdir -p memory          # add whichever other sections you want; a section is just a directory
+# drop markdown files into the section dirs
+fw sync --write          # regenerate the recency index + llms.txt
+fw doctor                # freshness + stale-pointer report
 ```
 
-On a merge conflict in `INDEX.md`: take either side, run `fw.py heal --write`. Done.
+**You succeeded when** `INDEX.md` holds an `AUTO-INDEX` block listing your files by section and
+`fw check` exits 0. `doctor` is advisory — a non-zero exit from it is a report, not a failed
+install.
+
+Your repo now looks like:
+
+```
+your-knowledge-repo/
+├── INDEX.md      curated pointers on top, generated AUTO-INDEX block below
+├── AGENTS.md     wiki-protocol block appended by init — the agent-facing contract
+├── llms.txt      generated on every sync --write
+├── memory/
+└── signals/
+```
+
+On a merge conflict in `INDEX.md`: take either side, run `fw heal --write`. Done.
 
 ## Your org's instance
 
@@ -60,8 +82,19 @@ Start with two — `memory/` and `signals/` — and let a section appear the fir
 genuinely does not fit the existing ones. Adding a directory is cheap; **a section nobody
 writes to is the signal to delete it, not to fill it.**
 
-`examples/org-instance/` is a minimal filled-in skeleton: copy it, replace the content, keep
-the shape.
+**Which of the two?** Two questions settle most files. *Can this be re-derived from the code?*
+— if yes, it does not belong in `memory/`. *Has a verdict been reached?* — if not, it is a
+`signals/` entry, not a decision record.
+
+`examples/org-instance/` is a minimal filled-in skeleton. Copy it into a repo you have **not**
+`init`-ed yet — it brings its own `INDEX.md`, and `fw init` refuses to overwrite one:
+
+```sh
+cp -r examples/org-instance/. your-knowledge-repo/
+cd your-knowledge-repo
+fw init          # keeps the copied INDEX.md, still appends the AGENTS.md block
+fw sync --write
+```
 
 ## Subcommands
 

@@ -22,15 +22,35 @@
 
 ## 快速开始
 
+无需安装:单个 Python 文件,除 `python3` 外无依赖。clone 一次,放在任意位置,按路径调用。
+
 ```sh
-cd your-knowledge-repo
-python3 bin/fw.py init          # Phase-0 审计 + 非覆盖式脚手架
-# 将 Markdown 文件放入分区目录(signals/, notes/, ...)
-python3 bin/fw.py sync --write  # 再生成新鲜度索引
-python3 bin/fw.py doctor        # 新鲜度 + 失效指针报告
+git clone https://github.com/chrono-meta/forge-wiki.git ~/tools/forge-wiki
+alias fw='python3 ~/tools/forge-wiki/bin/fw.py'   # 可选 —— 下面的示例都用 `fw`
+
+cd your-knowledge-repo   # 承载 Wiki 的仓库 —— 不是上面 clone 的那个
+fw init                  # Phase-0 审计 + 非覆盖式脚手架(创建 signals/)
+mkdir -p memory          # 其余分区自己建 —— 分区就是一个目录
+# 将 Markdown 文件放入分区目录
+fw sync --write          # 再生成新鲜度索引 + llms.txt
+fw doctor                # 新鲜度 + 失效指针报告
 ```
 
-`INDEX.md` 出现合并冲突时:任取一方,运行 `fw.py heal --write`。完事。
+**成功的判据**:`INDEX.md` 中出现按分区列出你文件的 `AUTO-INDEX` 块,且 `fw check` 退出码为 0。
+`doctor` 是建议性的 —— **非零退出码是一份报告,不是安装失败。**
+
+此时你的仓库长这样:
+
+```
+your-knowledge-repo/
+├── INDEX.md      上半部是人工策展的指针,下半部是生成的 AUTO-INDEX 块
+├── AGENTS.md     init 追加的 Wiki 协议块 —— 面向 Agent 的契约
+├── llms.txt      每次 sync --write 时生成
+├── memory/
+└── signals/
+```
+
+`INDEX.md` 出现合并冲突时:任取一方,运行 `fw heal --write`。完事。
 
 ## 你的组织实例
 
@@ -55,7 +75,18 @@ python3 bin/fw.py doctor        # 新鲜度 + 失效指针报告
 **从两个开始** —— `memory/` 和 `signals/`。其余的,等某个文件确实放不进现有分区的第一刻
 再让它出现。加一个目录很便宜。**没人写入的分区,是删除的信号,不是填充的信号。**
 
-`examples/org-instance/` 是最小骨架 —— 复制它,替换内容,保留形态。
+**放哪一个?** 两个问题基本就能定。*这个能从代码里重新推导出来吗?* —— 能,就不该进
+`memory/`。*已经有结论了吗?* —— 没有,那它就是 `signals/` 条目,而不是决策记录。
+
+`examples/org-instance/` 是最小骨架。把它复制到一个**尚未 `init`** 的仓库 —— 它自带
+`INDEX.md`,而 `fw init` 不会覆盖已存在的 INDEX.md:
+
+```sh
+cp -r examples/org-instance/. your-knowledge-repo/
+cd your-knowledge-repo
+fw init          # 保留复制过来的 INDEX.md,只追加 AGENTS.md 块
+fw sync --write
+```
 
 ## 子命令
 
