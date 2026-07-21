@@ -34,6 +34,35 @@ python3 bin/fw.py doctor        # freshness + broken-pointer report
 
 On a merge conflict in `INDEX.md`: take either side, run `fw.py heal --write`. Done.
 
+## Your org's instance
+
+`fw init` gives you a working index. It does not tell you *what to put in it* — that decision
+is what makes the wiki yours, and no tool can make it for you.
+
+The pairing this is built for: **a harness carries method and gates; the wiki carries your
+org's context.** Neither substitutes for the other. A harness with no context landing site
+re-derives the same organizational facts every session; a wiki with no harness has no gate on
+what enters it.
+
+A section axis that survived ~2 months of daily operation (981 files — the four largest
+sections hold 73% of them):
+
+| Section | Holds | Enters when |
+|---|---|---|
+| `memory/` | durable facts that outlive the session that found them | a fact will be needed again and is not derivable from the code |
+| `tracks/<project>/` | per-project working records, accumulated | work on that project produced something worth re-reading |
+| `signals/` | an observation or measurement that *may* matter later | you notice it — recorded before you know whether it pays off |
+| `handoff/` | state passed between machines, sessions, or people | the next reader is not the current writer |
+| `audit/` | periodic reviews on a cadence | the cadence fires, not when you feel like it |
+| `digests/` | recurring external scans | an automated job lands its output |
+
+Start with two — `memory/` and `signals/` — and let a section appear the first time a file
+genuinely does not fit the existing ones. Adding a directory is cheap; **a section nobody
+writes to is the signal to delete it, not to fill it.**
+
+`examples/org-instance/` is a minimal filled-in skeleton: copy it, replace the content, keep
+the shape.
+
 ## Subcommands
 
 | cmd | does | fail direction |
@@ -47,9 +76,11 @@ On a merge conflict in `INDEX.md`: take either side, run `fw.py heal --write`. D
 
 ## Status
 
-v0.1 — extracted from a year of daily operation of a private operator wiki (900+ files,
-multi-machine). The concurrency simulation in `tests/` is the regression anchor for every
-robustness claim; nothing here is asserted that the sim did not measure.
+v0.1 — extracted from ~2 months of daily operation of a private operator wiki: **981 markdown
+files, commits on 50 of 57 days, multi-machine** (measured 2026-07-21 —
+`git ls-files '*.md' | wc -l`; the store itself stays private). The concurrency simulation in
+`tests/` is the regression anchor for every robustness claim; nothing here is asserted that
+the sim did not measure.
 
 ## Distribution surfaces
 

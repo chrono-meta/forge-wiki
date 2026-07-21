@@ -1,0 +1,11 @@
+# org-instance
+
+> Agent-facing markdown wiki (forge-wiki). Read INDEX.md first; files carry OKF-compatible YAML frontmatter (type + description).
+
+## memory/
+
+- [deploy-runbook](memory/deploy-runbook.md): Production deploy sequence for the fleet-api service, including the one step that cannot be automated.
+
+## signals/
+
+- [2026-07-14-latency-budget](signals/2026-07-14-latency-budget.md): Measured p99 for fleet-api under production load — the planning-doc figure was an estimate, this one is measured.
