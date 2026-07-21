@@ -86,10 +86,37 @@ def file_date(p: Path) -> str:
         m = DATE_RE.search(parent.name)
         if m:
             return "-".join(m.groups())
+    # frontmatter date before mtime: mtime is NOT reproducible across clones.
+    # A fresh checkout (CI, new machine) stamps every file with checkout time, so an
+    # mtime-derived index differs from the committed one and any "regenerate and diff"
+    # gate is permanently red — a gate that never passes carries no signal.
+    d = frontmatter_date(p)
+    if d:
+        return d
     try:
         return date.fromtimestamp(p.stat().st_mtime).isoformat()
     except OSError:
         return "0000-00-00"
+
+
+FM_DATE_RE = re.compile(
+    r"^(?:last_reviewed|date|updated|synced_at)\s*:\s*[\"']?(20\d{2}-\d{2}-\d{2})", re.M
+)
+
+
+def frontmatter_date(p: Path) -> str | None:
+    """First dated frontmatter field, or None. Deterministic across clones."""
+    try:
+        head = p.read_text(encoding="utf-8", errors="replace")[:2000]
+    except OSError:
+        return None
+    if not head.startswith("---"):
+        return None
+    end = head.find("\n---", 3)
+    if end == -1:
+        return None
+    m = FM_DATE_RE.search(head[3:end])
+    return m.group(1) if m else None
 
 
 def head_lines(p: Path, n: int = 40):
