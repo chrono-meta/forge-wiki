@@ -1,0 +1,72 @@
+# === forge-harness standard .claudeignore ===
+# Claude Code context exclusion patterns (same syntax as .gitignore)
+# Effect: 20-40% per-session token cost reduction (on large projects)
+# Usage: copy this file to your project root as `.claudeignore`, then customize as needed
+# Created: 2026-05-07
+
+# === Dependencies ===
+node_modules/
+vendor/
+__pycache__/
+.venv/
+venv/
+.tox/
+
+# === Build artifacts ===
+dist/
+build/
+out/
+.next/
+.nuxt/
+.turbo/
+.cache/
+target/
+*.pyc
+*.class
+
+# === Lock files ===
+*.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+poetry.lock
+Cargo.lock
+
+# === Minified / source maps ===
+*.min.js
+*.min.css
+*.map
+
+# === Logs / temp ===
+*.log
+tmp/
+.tmp/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Secrets / env (security) ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+credentials/
+
+# === IDE ===
+.idea/
+.vscode/
+*.iml
+
+# === Claude Code internal cache ===
+.claude/cache/
+.claude/local/
+
+# === Git ===
+.git/
+
+# === project-specific ===
+tests/raw/
+tests/sim_data_*/
