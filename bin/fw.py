@@ -20,6 +20,15 @@ Subcommands:
   check              exit 1 if AUTO block differs from a fresh regeneration
 """
 
+# PEP 563 — evaluate annotations lazily, as strings. This file uses PEP 604 syntax
+# (`str | None`, introduced by frontmatter_date), which is only valid AT RUNTIME on
+# Python 3.10+. Without this line, importing fw.py raises TypeError on 3.7-3.9, so any
+# CI runner or environment pinned below 3.10 cannot run the engine at all. Nothing here
+# reads annotations at runtime (no get_type_hints / dataclass / pydantic), so behavior
+# is unchanged. Harvested back from a downstream deployment that hit this on a 3.9
+# runner — the canonical repo had the narrowest compatibility range of the three.
+from __future__ import annotations
+
 import os
 import re
 import sys
