@@ -1,13 +1,18 @@
 # CLAUDE.md
 
+> `{FH_ROOT}` = wherever the hub clone lives on the reader's machine. Written as a variable, not an
+> absolute path: this repo is used both personally and inside organizations, and one person's
+> directory layout does not belong in an org-visible checkout. Substitute it, or ignore the hub
+> rows entirely if you do not run a hub.
+
 ## Session Start
 
 When a user starts a session with greetings like "hello", "let's start", "resume", "continuing from where we left off", or says "read root memory", **both layers must activate**:
 
 ### Layer A — Auto read (4 steps required)
 
-1. **Read CATALOG.md** — `~/projects/forge-harness/CATALOG.md` (recent work context + latest meta cwd work cross-link)
-2. **Read latest session file** — `~/projects/forge-harness/tracks/forge-wiki/` most recent mtime item (last work on domain + next round reverse-injection intent persistence location / use `ls -lat` or `find -mtime`)
+1. **Read CATALOG.md** — `{FH_ROOT}/CATALOG.md` (recent work context + latest meta cwd work cross-link)
+2. **Read latest session file** — `{FH_ROOT}/tracks/forge-wiki/` most recent mtime item (last work on domain + next round reverse-injection intent persistence location / use `ls -lat` or `find -mtime`)
 3. **Check MEMORY.md next-session trigger** — if project memory `MEMORY.md` auto-load is truncated, explicitly Read to supplement the next-session trigger section
 4. **Check todo/plan files if present** — `*todo*`/`*plan*` pattern (supplementary materials)
 5. **Search for duplicate installs in same root** — `ls ../ | grep -iE '(harness|forge)'` to catch sibling assets in parent directory. If found, report to user + delegate branching decision (use existing install / proceed with new / archive then proceed)
@@ -74,14 +79,14 @@ When the judgment is ambiguous, the AI **states synergy potential first** then d
 
 ## Knowledge Hub (forge-harness)
 
-Persistent knowledge for this project is stored at `~/projects/forge-harness/`.
+Persistent knowledge for this project is stored at `{FH_ROOT}/`.
 
-- **Past work search**: First read `~/projects/forge-harness/CATALOG.md`, identify related files by tags
-- **Learnings/feedback originals**: `~/projects/forge-harness/tracks/forge-wiki/`
-- **At session end**: follow the Sync Protocol in `~/projects/forge-harness/CLAUDE.md` to sync
-- **When new patterns are found**: follow the Push Protocol in `~/projects/forge-harness/CLAUDE.md` to feed back
+- **Past work search**: First read `{FH_ROOT}/CATALOG.md`, identify related files by tags
+- **Learnings/feedback originals**: `{FH_ROOT}/tracks/forge-wiki/`
+- **At session end**: follow the Sync Protocol in `{FH_ROOT}/CLAUDE.md` to sync
+- **When new patterns are found**: follow the Push Protocol in `{FH_ROOT}/CLAUDE.md` to feed back
 
 <!-- [CUSTOMIZE] Replace forge-wiki with the actual project name -->
 <!-- [CUSTOMIZE] If there is a domain knowledge path, add:
-- **Domain knowledge**: `~/projects/forge-harness/knowledge/domain/{domain}/`
+- **Domain knowledge**: `{FH_ROOT}/knowledge/domain/{domain}/`
 -->

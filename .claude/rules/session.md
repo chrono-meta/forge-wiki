@@ -23,7 +23,7 @@ Usage:
 
 At the start of a conversation ("hello", "let's start", "load root memory"), perform the following:
 
-1. Read `~/projects/forge-harness/CATALOG.md`
+1. Read `{FH_ROOT}/CATALOG.md`
    - Understand recent work context
    - Check today's tasks (todo/plan)
 
@@ -135,7 +135,7 @@ Be conscious of all 5 principles **before** writing code — directly reduces ba
 **Before** designing a new feature or pattern:
 
 1. grep for similar implementations in the project — reuse if already present
-2. grep learnings from sibling projects in the hub (e.g., `~/projects/forge-harness/`) — prevent reinventing solutions already solved elsewhere
+2. grep learnings from sibling projects in the hub (e.g., `{FH_ROOT}/`) — prevent reinventing solutions already solved elsewhere
 3. Re-read the project's CLAUDE.md and rules/*.md — check for overlooked constraints
 
 Starting design with zero cited references is a warning signal for **missing own assets**. Always present at least 1 grep result before beginning design.
