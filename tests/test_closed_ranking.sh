@@ -77,6 +77,23 @@ else
   printf '%s\n' "$outn" | sed 's/^/     /'
 fi
 
+
+# R1 — a RESOLVED/DONE note must NOT be demoted. Cross-family review (gpt-5.5, 2026-07-29) named the
+# failing input: stale live notes plus one newly RESOLVED incident postmortem, truncated to N — the
+# postmortem is exactly what a reader came for, and demoting the whole CLOSED set hides it.
+# Superseding replaces; finishing does not. Without this lane, narrowing the demotion back to the
+# full CLOSED set would pass unnoticed.
+printf -- '---\ntype: note\ndescription: "settled incident"\nstatus: RESOLVED\n---\n\npostmortem\n' \
+  > "$TD/notes/incident_2026-12-30.md"
+outr=$(_block 1)
+if printf '%s\n' "$outr" | grep -q 'incident_2026-12-30'; then
+  ok "R1 a RESOLVED note keeps its date rank (finished is not superseded)"
+else
+  bad "R1 a RESOLVED note was demoted — the newest settled record is hidden"
+  printf '%s\n' "$outr" | sed 's/^/     /'
+fi
+rm -f "$TD/notes/incident_2026-12-30.md"
+
 echo "----"
-echo "closed-ranking anchor: $pass passed, $fail failed"
+echo "superseded-ranking anchor: $pass passed, $fail failed"
 [ "$fail" -eq 0 ] || exit 1
