@@ -167,14 +167,23 @@ def lint_frontmatter(lines) -> list:
     return issues
 
 
-def is_closed(p: Path) -> bool:
-    """Closed = stamped SUPERSEDED / DONE / RESOLVED.
+# Demotion applies to SUPERSEDED **only** — narrower than CLOSED_RE on purpose.
+#
+# The absorbed proposition is "retrieval ranks the CORRECTION above the thing it corrected". A note
+# marked `status: DONE` or `RESOLVED` has not been corrected; it is finished. Cross-family review
+# (gpt-5.5, 2026-07-29) supplied the failing input that made the difference concrete: a section of
+# five stale live scratch notes plus one newly RESOLVED incident postmortem — demoting the whole
+# CLOSED set truncates the postmortem out of the index, which is precisely the record a reader
+# comes for. Superseding replaces; finishing does not.
+SUPERSEDED_RE = re.compile(r"STATUS:\s*SUPERSEDED|status:\s*superseded", re.I)
 
-    Reuses the SAME predicate the display layer already applies (head lines + CLOSED_RE) rather
-    than spelling a second one: two copies of one test drift apart, and the lenient copy wins in
-    silence.
+
+def is_superseded(p: Path) -> bool:
+    """True only for a note that a later note REPLACES.
+
+    Reads the same head lines the display layer reads, so the two never disagree about a file.
     """
-    return bool(CLOSED_RE.search("".join(head_lines(p))))
+    return bool(SUPERSEDED_RE.search("".join(head_lines(p))))
 
 
 def collect(root: Path, section: str):
@@ -183,7 +192,7 @@ def collect(root: Path, section: str):
     # (OKF 는 index.md 를 디렉터리 목록으로 예약하므로 하위 디렉터리의 index.md 도 콘텐츠가 아니다)
     files = [p for p in (root / section).rglob("*.md")
              if ".git" not in p.parts and p.name not in ("INDEX.md", "index.md")]
-    # Live before closed, then newest first.
+    # Live-or-finished before SUPERSEDED, then newest first.
     #
     # Absorbed from obsidian-mind's supersede ranking (MIT, breferrari): "retrieval ranks the
     # correction above the thing it corrected". Date alone let a note stamped SUPERSEDED outrank
@@ -193,7 +202,7 @@ def collect(root: Path, section: str):
     # closed note did not merely sort high — it CONSUMED one of the visible slots and pushed a live
     # note out of the derived index entirely. A reader then sees a superseded item and never learns
     # the live one exists. Closing knowledge must not cost the index a slot.
-    files.sort(key=lambda p: (0 if is_closed(p) else 1, file_date(p), p.name), reverse=True)
+    files.sort(key=lambda p: (0 if is_superseded(p) else 1, file_date(p), p.name), reverse=True)
     return files
 
 
