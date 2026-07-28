@@ -167,13 +167,33 @@ def lint_frontmatter(lines) -> list:
     return issues
 
 
+def is_closed(p: Path) -> bool:
+    """Closed = stamped SUPERSEDED / DONE / RESOLVED.
+
+    Reuses the SAME predicate the display layer already applies (head lines + CLOSED_RE) rather
+    than spelling a second one: two copies of one test drift apart, and the lenient copy wins in
+    silence.
+    """
+    return bool(CLOSED_RE.search("".join(head_lines(p))))
+
+
 def collect(root: Path, section: str):
     # F-4 로 소문자 index.md 도 유효한 위키 홈이 됐는데 여기선 대문자만 제외하고 있었다
     # → 홈이 자기 인덱스 안에 콘텐츠로 다시 색인된다. 둘 다 제외한다.
     # (OKF 는 index.md 를 디렉터리 목록으로 예약하므로 하위 디렉터리의 index.md 도 콘텐츠가 아니다)
     files = [p for p in (root / section).rglob("*.md")
              if ".git" not in p.parts and p.name not in ("INDEX.md", "index.md")]
-    files.sort(key=lambda p: (file_date(p), p.name), reverse=True)
+    # Live before closed, then newest first.
+    #
+    # Absorbed from obsidian-mind's supersede ranking (MIT, breferrari): "retrieval ranks the
+    # correction above the thing it corrected". Date alone let a note stamped SUPERSEDED outrank
+    # its own replacement whenever its filename date happened to be newer.
+    #
+    # And the damage was worse than mis-ordering: this list is TRUNCATED to PER_SECTION, so a
+    # closed note did not merely sort high — it CONSUMED one of the visible slots and pushed a live
+    # note out of the derived index entirely. A reader then sees a superseded item and never learns
+    # the live one exists. Closing knowledge must not cost the index a slot.
+    files.sort(key=lambda p: (0 if is_closed(p) else 1, file_date(p), p.name), reverse=True)
     return files
 
 
