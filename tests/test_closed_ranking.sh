@@ -94,6 +94,52 @@ else
 fi
 rm -f "$TD/notes/incident_2026-12-30.md"
 
+
+# D1 — ranking-predicate drift anchor.
+#
+# The predicate below is DUPLICATED across the wiki family: forge-wiki/bin/fw.py ·
+# llmwiki-template/bin/fw.py · llmwiki-qa/bin/fw.py · fh-be/scripts/index_sync.py.
+# Measured 2026-07-29: all four byte-identical (5 lines, sha256[0:16] below). NOTHING enforced
+# that. One repo edited alone diverges silently — the exact class that shipped a 0/4
+# known-positive scan on 2026-07-28 (canonical copy fixed, field copy not, after the field was
+# told to run it). Unification was declined on evidence-threshold grounds: the four are
+# independent release units and recurrence is n=0. This anchor is the cheap half.
+#
+# CLOSED_RE is deliberately NOT hashed: fh-be spells it `status:\s*DONE|status:\s*RESOLVED`,
+# fw.py spells it `status:\s*(DONE|RESOLVED)`. Measured equivalent over 12 known cases
+# (2026-07-29, with a live control), so hashing it would fail on a benign textual difference and
+# train the override reflex.
+CANON_PRED_SHA="1c5ef8295b16ebd7"
+_sha16() { if command -v shasum >/dev/null 2>&1; then shasum -a 256; else sha256sum; fi | cut -c1-16; }
+_pred() {
+  sed -n -e '/^SUPERSEDED_RE = /p' \
+         -e '/^def is_superseded/,/^$/p' \
+         -e '/^ *files\.sort(/p' "$1"
+}
+# Integer-sanitize: a non-numeric here makes `[ -ne ]` a bash error, which reads as false and
+# would fall through to the compare — i.e. fail-OPEN. Force numeric-or-zero.
+_pred_lines=$(_pred "$FW" | wc -l | tr -dc '0-9')
+[ -n "$_pred_lines" ] || _pred_lines=0
+if [ "$_pred_lines" -ne 5 ]; then
+  bad "D1 instrument — predicate extract gave $_pred_lines lines, expected 5 (renamed or moved; cannot compare)"
+else
+  _actual=$(_pred "$FW" | _sha16)
+  if [ "$_actual" = "$CANON_PRED_SHA" ]; then
+    ok "D1 ranking predicate matches the family canon ($CANON_PRED_SHA)"
+  else
+    bad "D1 ranking predicate DRIFTED from the family canon (canon=$CANON_PRED_SHA, here=$_actual)"
+    _pred "$FW" | sed 's/^/     /'
+  fi
+  # Known-positive: the hash must reject a mutated predicate. Without this lane a broken
+  # extractor that always returns the same bytes would read as a permanent green.
+  _mut=$(_pred "$FW" | sed 's/reverse=True/reverse=False/' | _sha16)
+  if [ "$_mut" != "$CANON_PRED_SHA" ]; then
+    ok "D1-cal known-positive — a mutated predicate does not match (the hash is live)"
+  else
+    bad "D1-cal INSTRUMENT DEAD — a mutated predicate still matched the canon"
+  fi
+fi
+
 echo "----"
 echo "superseded-ranking anchor: $pass passed, $fail failed"
 [ "$fail" -eq 0 ] || exit 1
