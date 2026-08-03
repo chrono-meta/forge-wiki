@@ -45,9 +45,11 @@ EOF
 
 ### Code Writing Principles
 
-<!-- [CUSTOMIZE] Adjust to match your project's coding conventions. The 5 principles below are universal and valid for any project. -->
+<!-- [CUSTOMIZE] Adjust to match your project's coding conventions. Two further principles
+     (locator stability, flakiness) shipped in the FH template and were deleted here: this is a
+     bash/python wiki engine with no UI automation, so they had never applied. -->
 
-Be conscious of all 5 principles **before** writing code — directly reduces back-and-forth where Claude rushes to create something and the user has to correct it.
+Be conscious of every principle below **before** writing code — directly reduces back-and-forth where Claude rushes to create something and the user has to correct it.
 
 #### 1. Reference Existing Code (Consistency First)
 
