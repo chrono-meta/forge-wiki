@@ -1,40 +1,4 @@
-<!--
-session.md — Claude Code Session Rules Template
-
-Purpose of this file:
-- Define Claude's session operating rules (how to behave)
-- Behavioral guidelines applied across the entire project
-- Commit to Git and share with the team
-- Edited and managed directly by the user
-
-Difference from MEMORY.md:
-- MEMORY.md: Stores data/experience learned during conversation (auto-managed by Claude)
-- session.md: Defines procedures/rules for Claude to follow (edited directly by the user)
-
-Usage:
-- Copy this file to your project's .claude/rules/session.md
-- Add, remove, or modify sections to fit your project
-- Change sections marked with [CUSTOMIZE] comments to match your project
 -->
-
-### Automatic Actions at Session Start
-
-#### Root Memory (Knowledge Hub) Connection
-
-At the start of a conversation ("hello", "let's start", "load root memory"), perform the following:
-
-1. Read `{FH_ROOT}/CATALOG.md`
-   - Understand recent work context
-   - Check today's tasks (todo/plan)
-
-2. Load project memory index
-   - Check `.claude/projects/.../memory/MEMORY.md`
-   - Prioritize loading memory most relevant to current work
-   - Proceed naturally without notifying the user that memory was loaded
-
-#### Exceptions
-- If the user explicitly requests not to use memory
-- For simple one-off questions, load is optional
 
 ---
 
@@ -77,23 +41,6 @@ EOF
 
 ---
 
-### Automatic Response to Issues
-
-<!-- [CUSTOMIZE] Adjust report tool/path to match your project -->
-
-#### Automatic Check Trigger
-
-When the user mentions a problem, **automatically** locate and analyze the latest test report:
-
-1. **Trigger keywords**
-   - "something broke", "got an error", "it failed", "not working"
-   - "issue occurred", "test failed", "broken", "failed"
-
-2. **Analyze and report**
-   - Names of failing test cases
-   - Error messages and stack traces
-   - Summarize in a concise format
-
 ---
 
 ### Code Writing Principles
@@ -114,23 +61,7 @@ Be conscious of all 5 principles **before** writing code — directly reduces ba
 - Manage side effects (shared state, global variables, file locks)
 - Use `git grep` before changes to understand the impact surface — check for unexpected callers
 
-#### 3. Locator and Identifier Stability (UI code only)
-
-<!-- [CUSTOMIZE] Can be removed for non-mobile QA / non-web QA projects -->
-
-- Do not depend on dynamically generated attributes (auto-generated id, timestamps in content-desc)
-- Avoid absolute XPath — fragile to structural changes
-- Consider i18n for text-based identifiers (multilingual projects)
-- If the project has `.claude/rules/LOCATOR_*` guides, those take precedence
-
-#### 4. Flakiness Risk Management
-
-- **No `time.sleep`** — use explicit waits (implicit/explicit wait) + condition-based polling
-- No unbounded waits without a timeout
-- Allow tolerance in screenshot-based assertions
-- Minimize assumptions about device/environment state (keyboard visibility, previous screen state, etc.)
-
-#### 5. Mandatory grep Before Design (Prevent Missing Own Assets)
+#### 3. Mandatory grep Before Design (Prevent Missing Own Assets)
 
 **Before** designing a new feature or pattern:
 
@@ -150,4 +81,4 @@ Starting design with zero cited references is a warning signal for **missing own
 1. **Framework rules** — code patterns (non-negotiable)
 2. **Test design philosophy** — "what to test" (QA Identity, etc.)
 3. **Learned feedback** — rules based on user experience
-4. **Operational rules** — session backup, report analysis, and other work processes
+4. **Operational rules** — session backup and other work processes
