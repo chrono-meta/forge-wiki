@@ -7,24 +7,9 @@
 
 ## Session Start
 
-When a user starts a session with greetings like "hello", "let's start", "resume", "continuing from where we left off", or says "read root memory", **both layers must activate**:
-
-### Layer A — Auto read (4 steps required)
-
-1. **Read CATALOG.md** — `{FH_ROOT}/CATALOG.md` (recent work context + latest meta cwd work cross-link)
-2. **Read latest session file** — `{FH_ROOT}/tracks/forge-wiki/` most recent mtime item (last work on domain + next round reverse-injection intent persistence location / use `ls -lat` or `find -mtime`)
-3. **Check MEMORY.md next-session trigger** — if project memory `MEMORY.md` auto-load is truncated, explicitly Read to supplement the next-session trigger section
-4. **Check todo/plan files if present** — `*todo*`/`*plan*` pattern (supplementary materials)
-5. **Search for duplicate installs in same root** — `ls ../ | grep -iE '(harness|forge)'` to catch sibling assets in parent directory. If found, report to user + delegate branching decision (use existing install / proceed with new / archive then proceed)
-
-### Layer B — Proactive initiative (active onboarding 5-skill cascade)
-
-After Layer A completes, **when the user enters a task**, activate AI proactive initiative mode:
-
-1. **Auto-initiative (1-line question)** — *"What task/project would you like to start? (e.g., 'Spring Boot API development', 'React component refactoring', 'continue existing [X] track')"* (if active track exists: *"Would you like to continue active track [X], or enter a new task?"*)
-2. **5-skill cascade** — `plugin-recommender` (internal GHE → external → built-in candidates) → `cross-ecosystem-synergy-detection` (synergy grade table) → `.claudeignore` standard initiative (`cp templates/.claudeignore`) → model switching guidance (default `/model sonnet` — FH dispatches floored skills/agents at higher tiers itself; pin a stronger model for harness-editing sessions, or when the Field Depth-Escalation Notice below fires — see README §Model setup) → `verify-bidirectional`·`harvest-loop` natural emergence waiting
-3. **User consent → actual setup** — plugin install / skill pre-activation / `.claudeignore` application / model switch
-4. **Project cwd handover guidance** — *"Setup complete. Move to the project cwd and call `claude` to start working."*
+If you run the forge-harness hub, read this project's track first —
+`{FH_ROOT}/tracks/forge-wiki/`, most recent by mtime — for the last work on this domain. If you do
+not run a hub, skip it; nothing else here depends on one.
 
 **Simplification guard**: When an explicit task utterance is made (e.g., "debug X code"), enter task immediately (skip onboarding). Activates once per session.
 
@@ -58,13 +43,6 @@ switch the session model autonomously** (human override is inviolable) · sessio
 strains never see it — the Sonnet default stays friction-free.
 
 **Basis**: Meta-harness mission *"easy and convenient + no setup burden + token savings"* direct implementation mechanism. Natural hub/action-leader division (single trigger in meta-harness cwd → handover to action-leader cwd).
-
-**3 usage modes — "don't block those who come, don't stop those who leave"** (meta-harness operating philosophy):
-- **Mode A (standard)**: meta-harness cwd setup → handover to separate project cwd (4 steps above)
-- **Mode B (resident)**: create **separate project directory** within the forge-harness install environment and work there. Keep the forge-harness directory itself as reference only — use `.gitignore` to block forge-harness assets from mixing into the project
-- **Mode C (plugin/skill only)**: install only plugins/skills without going through forge-harness (available via marketplace without cloning). Skill output accumulates as history within the user's own project. No automatic signals from the forge-harness side expected — indirect contribution depends on user's active communication (issues · PR · channels)
-
-If the user explicitly states a mode, immediately guide that mode. Do not force standard mode. Do not accumulate personal work artifacts in the forge-harness directory itself (protect reference asset identity).
 
 ## Asset Synergy Branching Decision (meta vs. action-leader)
 
