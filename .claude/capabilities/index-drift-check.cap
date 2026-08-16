@@ -1,0 +1,22 @@
+# forge-wiki 가 **자기 능력을 스스로 선언한다**.
+# `requires_cwd: SELF` — tracked 파일에 운영자 홈 절대경로를 싣지 않는다.
+# 질문: 파생 인덱스(AUTO-INDEX)가 실제 파일 상태와 어긋났나. SPEC §4 의 CI 게이트.
+id: forge-wiki:index-drift-check
+summary: derived-index drift gate over a forge-wiki knowledge store — is the AUTO-INDEX stale
+tags: wiki index drift freshness knowledge gate
+entry: bash bin/fw_check_capability.sh
+requires_cwd: SELF
+verdict_channel: exit
+verdict_enum: 0=CLEAN 1=DRIFT 3=NO_TARGET 10=HARNESS_ERROR
+approval: auto
+reversibility: reversible
+residency: operator-private
+degrade: fail-closed
+tier_floor: none
+writes: read-only
+judge: mechanical
+verdict_binding: DRIFT NO_TARGET HARNESS_ERROR
+calibration_positive_args: --known-positive
+calibration_positive_expect: DRIFT
+calibration_negative_args: --known-negative
+calibration_negative_expect: CLEAN
