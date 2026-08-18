@@ -413,8 +413,35 @@ def cmd_init(root_dir: Path):
     print("[fw init] done — drop .md files into section dirs, then: fw.py sync --write")
 
 
+USAGE = """fw — forge-wiki index tool
+
+  fw.py [subcommand] [--write]
+
+Subcommands
+  sync    (default)  regenerate the AUTO-INDEX block from frontmatter + filename dates
+  heal               same as sync, but also collapses duplicated/conflicted AUTO blocks
+  lint               check frontmatter (type + description required)
+  doctor             report wiki health
+  check              exit non-zero if the AUTO block is stale
+  init               create INDEX.md + AGENTS.md block + signals/ in the CURRENT directory
+
+Flags
+  --write            persist changes (without it, sync/heal are read-only)
+  -h, --help         show this and exit WITHOUT doing anything
+
+Run inside a wiki (a directory with INDEX.md, or below one); `init` creates one."""
+
+
 def main():
     args = sys.argv[1:]
+    # `--help` must never have a side effect. Before this guard, `-h`/`--help` was not a flag at
+    # all — it was an ignored extra argument, so `fw.py init --help` RAN init and wrote INDEX.md,
+    # AGENTS.md and signals/ into the current directory. Asking a tool what it does is the one
+    # request that must be free; a help request that mutates the tree teaches people not to ask.
+    # Found 2026-08-18 by someone doing exactly that in this repo's root.
+    if any(a in ("-h", "--help") for a in args):
+        print(USAGE)
+        return
     cmd = args[0] if args else "sync"
     write = "--write" in args
     if cmd == "init":
