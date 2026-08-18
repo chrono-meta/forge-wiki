@@ -1,3 +1,10 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# 위성 공개표면 게이트용 패턴 (로컬 전용 — 운영자 리터럴을 공개 표면에 안 올린다)
+.claude/rules/.public-surface-patterns
+.claude/rules/.public-surface-patterns.defaults
+
+# 위성 실행 로그 — 절대경로가 들어간다. 착지면 안에 떨어지지만 공개 대상이 아니다.
+wiki/signals/logs/
