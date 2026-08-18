@@ -150,6 +150,27 @@ def summary_of(lines) -> str:
     return ""
 
 
+# A `status:` the author typed must reach the surface the wiki is READ at. Measured 2026-08-18:
+# an automated digest run landed a node carrying `status: constrained` (its web fetches were
+# blocked, so it held no live signal) and the derived index rendered it as an ordinary digest —
+# the warning lived in the body only. This wiki's own protocol is "read INDEX.md first; open only
+# what it makes relevant", so a status that never reaches the index is a slot with no consumer:
+# the author believes the degrade is declared, the reader never sees it.
+#
+# The tool RENDERS, it does not JUDGE — any status is surfaced verbatim rather than matched against
+# an invented enum. `⛔closed` already covers SUPERSEDED/DONE/RESOLVED, so those are not doubled.
+def status_of(lines) -> str:
+    if not lines or lines[0].strip() != "---":
+        return ""
+    for ln in lines[1:]:
+        if ln.strip() == "---":
+            break
+        m = re.match(r"\s*status:\s*[\"']?([A-Za-z][\w .-]*?)[\"']?\s*$", ln)
+        if m:
+            return m.group(1).strip()
+    return ""
+
+
 def lint_frontmatter(lines) -> list:
     if not lines or lines[0].strip() != "---":
         return ["no-frontmatter"]
@@ -220,6 +241,8 @@ def build_block(root: Path) -> str:
             desc = summary_of(lines)
             desc = (desc[:110] + "…") if len(desc) > 110 else desc
             closed = " ⛔closed" if CLOSED_RE.search("".join(lines)) else ""
+            _st = status_of(lines)
+            closed += f" ⚑{_st}" if _st and not closed else ""
             _rel = p.relative_to(root)
             # 링크로 emit 한다. 백틱 경로는 옵시디언에서 그래프 엣지도 백링크도 안 만든다 —
             # 위키 홈이 고립 노드로 렌더된다. write_llms_txt 는 이미 링크 형태를 쓴다(일관성).
@@ -242,7 +265,11 @@ def write_llms_txt(root: Path):
         lines.append("")
         for p in files[:PER_SECTION]:
             desc = summary_of(head_lines(p)) or p.stem
-            lines.append(f"- [{p.stem}]({p.relative_to(root)}): {desc[:120]}")
+            # 같은 이유로 llms.txt 에도 상태를 싣는다. 읽는 면이 둘인데 한쪽만 고치면
+            # 반쪽-픽스이고, 이 파일은 **에이전트가 읽는 면**이라 오히려 더 중요하다.
+            _st = status_of(head_lines(p))
+            _mark = f" [{_st}]" if _st else ""
+            lines.append(f"- [{p.stem}]({p.relative_to(root)}){_mark}: {desc[:120]}")
         lines.append("")
     (root / "llms.txt").write_text("\n".join(lines), encoding="utf-8")
 
