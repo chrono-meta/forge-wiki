@@ -8,3 +8,6 @@ __pycache__/
 
 # 위성 실행 로그 — 절대경로가 들어간다. 착지면 안에 떨어지지만 공개 대상이 아니다.
 wiki/signals/logs/
+
+# Claude Code local permissions (never committed — machine-local)
+.claude/settings.local.json
